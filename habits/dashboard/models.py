@@ -8,27 +8,36 @@
 from django.db import models
 
 
+class MetaCategory(models.Model):
+    name = models.CharField(max_length=100)
+    weekly_goal = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'meta_category'
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    weekly_goal = models.IntegerField(blank=True, null=True)
+    metacat_fk = models.ForeignKey(MetaCategory, models.DO_NOTHING, db_column='metacat_fk')
+
+    class Meta:
+        managed = False
+        db_table = 'category'
+
+
 class Activity(models.Model):
     name = models.CharField(unique=True, max_length=100)
     distance = models.FloatField(blank=True, null=True)
     duration = models.TimeField(blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=100, blank=True, null=True)
-    category_fk = models.ForeignKey('Category', models.DO_NOTHING, db_column='category_fk')
+    category = models.ForeignKey(Category, models.DO_NOTHING, db_column='category_fk')
 
     class Meta:
         managed = False
         db_table = 'activity'
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-    weekly_goal = models.IntegerField(blank=True, null=True)
-    metacat_fk = models.ForeignKey('MetaCategory', models.DO_NOTHING, db_column='metacat_fk')
-
-    class Meta:
-        managed = False
-        db_table = 'category'
 
 
 class FitActivity(models.Model):
@@ -44,10 +53,3 @@ class FitActivity(models.Model):
         db_table = 'fit_activity'
 
 
-class MetaCategory(models.Model):
-    name = models.CharField(max_length=100)
-    weekly_goal = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'meta_category'
