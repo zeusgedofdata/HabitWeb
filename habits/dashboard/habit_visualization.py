@@ -8,7 +8,7 @@ from dashboard.models import Activity
 
 
 def weekly_report():
-    activity = Activity.objects.all()
+    activity = pd.DataFrame(list(Activity.objects.all().values('name', 'date')))
     fig = go.Figure()
     scatter = go.Scatter(x=[0, 1, 2, 3], y=[0, 1, 2, 3],
                          mode='lines', name='test',
